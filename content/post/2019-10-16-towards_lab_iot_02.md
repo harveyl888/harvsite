@@ -9,7 +9,7 @@ tags = ["python", "IoT"]
 In order to test communication we'll set up two clients, each representing an instrument, along with a server which acts as the MQTT broker, database and visualization.  The three machines are all running ubuntu under VirtualBox.  
 In this case **client1** sends *measurement1* data which resets to a random value between 20 and 50 when it receives a signal from *trigger*.  **client2** sends *measurement2* data which resets to 20 when it receives a signal from *trigger*.  The **controller** monitors *measurement1* and signals the *trigger* when *measurement1* is above 50.  The **controller** also updates influxDB with data from *measurement1* and *measurement2*.  **client1** and **client2** represent the two clients, running instruments and the server is **controller**.  Codes for each are below.
 
-![](/images/post-images/2019-10-16-lab_iot_02/virtual_servers.png)
+{{< figure src="/images/post-images/2019-10-16-lab_iot_02/virtual_servers.png" >}}
 
 ### controller (virtual machine 1 - ip address = 10.0.2.15)
 
@@ -272,5 +272,4 @@ if __name__ == '__main__':
 Running all three codes leads to continuous output which updates every second.  *measurement1* and *measurement2* are stored in the InfluxDB under database **lab1** which can be visualized using grafana (default = localhost, port 3000).  
 *measurement1* and *measurement2* increment every second.  When *measurement1* reaches 50 it resets itself to a random value between 20 and 50 and resets *measurement2* to 20.
 
-![](/images/post-images/2019-10-16-lab_iot_02/grafana_python_out.png)
-
+{{< figure src="/images/post-images/2019-10-16-lab_iot_02/grafana_python_out.png" >}}

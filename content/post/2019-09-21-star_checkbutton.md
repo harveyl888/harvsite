@@ -8,7 +8,7 @@ tags = ["R", "shiny"]
 
 Here's a short shiny app along with some css that allows a font-awesome icon to behave as a checkbox.  The font-weight setting in the css file determines if the icon should be solid (font-weight = 900 for `TRUE`) or regular (font-weight = 400 for `FALSE`).
 
-![](/images/post-images/2019-09-21-star_checkbutton/star_checkbox.png)
+{{< figure src="/images/post-images/2019-09-21-star_checkbutton/star_checkbox.png" >}}
 
 ### checkbox.css
 ```css
