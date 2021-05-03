@@ -2,7 +2,7 @@
 author = "Harvey"
 title = "Managing Users"
 date = "2017-01-13"
-description = "Managing users in a Shiny Ap"
+description = "Managing users in a Shiny App"
 tags = ["R", "shiny"]
 +++
 
