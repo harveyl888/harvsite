@@ -4,10 +4,10 @@ title = "Passing a Mixture of Reactive and Non-Reactives to a Shiny Module"
 date = "2021-06-20"
 description = "Passing a Mixture of Reactive and Non-Reactives to a Shiny Module"
 tags = ["R", "shiny"]
-draft = true
+draft = false
 +++
 
-Generally there is no issue in sending a list of parameters (reactive and non-reactive) to a shiny module.  Here's an example where a shiny module would be called multiple times, programatically, where the reactive nature of the parameters may be variable (reactive in one instance but not in another).  One way to deal with this is to read in the list of parameters and convert the non-reactive ones to reactive.  Those originally reactive, remain so and therefore update on a change.
+Generally there is no issue in sending a list of parameters (reactive and non-reactive) to a shiny module.  Here's an example where a shiny module would be called multiple times, programatically, where the reactive nature of the parameters may be variable (reactive in one instance but not in another).  One way to deal with this is to read in the list of parameters and convert the non-reactive ones to reactive.  Those originally reactive, remain so and therefore update on a change.  In the examples below a single reactive or non-reactive list is passed from the parent shiny app to a shiny module.  The concept works for a single or multiple inputs.
 
 ## Example 1 - this shiny module will fail
 
