@@ -3,7 +3,7 @@ author = "Harvey"
 title = "Passing a Mixture of Reactive and Non-Reactives to a Shiny Module"
 date = "2021-06-20"
 description = "Passing a Mixture of Reactive and Non-Reactives to a Shiny Module"
-tags = ["R", "shiny"]
+tags = ["R", "shiny", "Shiny modules"]
 draft = false
 +++
 
