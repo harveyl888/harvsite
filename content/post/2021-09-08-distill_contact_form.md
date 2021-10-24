@@ -10,7 +10,7 @@ draft = true
 ## Purpose
 
 Can we use use RStudio Connect to build an internal contact form on a {distill} website?  
-{distill} is a great R library for building static websites and blogs but has the same limitations of other static websites, namely no server-side programming.  This means that implementing a contact form requires using a third party service.  This can, however, be accomplished when using RStudio Connect via a plumber API.
+{distill} is a great R library for building static websites and blogs but has the same limitations of other static websites, namely no server-side programming.  This means that implementing a contact form requires using a third party service.  This can, however, be accomplished when hosting via RStudio Connect using a plumber API.
 
 ## Attempt 1
 
