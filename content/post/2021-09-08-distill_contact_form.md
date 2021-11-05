@@ -326,3 +326,7 @@ window.addEventListener("load", function() {
 
 });
 ~~~
+
+in this case we have a contact form which sends a message to an email inbox.  A simple `alert` confirms that the form has been intercepted and an email sent.  The contact form looks as follows:
+
+{{< figure src="/images/post-images/2021-09-08-distill_contact_form/contact_form.png" >}}
