@@ -36,6 +36,19 @@ There are four apps along with a javascript file which handles opening windows:
 -  app_graphics/app.R - a simple app that reads in the json file and plots a chart.
 -  app_details/app.R - a simple app that reads in the json file and outputs the file contents.
 
+# Concept
+
+launcher controls opening and closing of the other three apps (app_options, app_graphics and app_details).  Communication is handled using a json file.
+
+{{< mermaid align="left" theme="neutral" >}}
+graph TB
+  subgraph launcher
+    app_options --> json_file;
+    json_file --> app_graphics;
+    json_file --> app_details;
+  end
+{{< /mermaid >}}
+
 # Code
 
 ## launcher/app.R
