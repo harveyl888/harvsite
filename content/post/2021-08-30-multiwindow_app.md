@@ -257,3 +257,225 @@ Shiny.addCustomMessageHandler('disable', function(id) {
 
 ```
 
+
+## app_options/app.R
+
+```r
+## app_options
+## A simple app that offers a series of options
+
+library(shiny)
+library(shinyWidgets)
+library(jsonlite)
+
+server <- function(input, output, session) {
+  
+  filename <- reactive({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query$file)) {
+      query$file
+    } else {
+      ""
+    }
+  })
+  
+  output$ui_axes <- renderUI({
+    req(input$sel_data)
+    ## select x and y parameters from numeric columns
+    df <- get(input$sel_data)
+    columns <- names(df)[sapply(df, class) == "numeric"]
+    tagList(
+      selectizeInput("sel_x", "X parameter", choices = columns),
+      selectizeInput("sel_y", "Y parameter", choices = columns)
+    )
+  })
+  
+  ## write file when updating parameter
+  observeEvent(input$sel_data, {
+    write_file()
+  })
+  
+  observeEvent(input$sel_x, {
+    write_file()
+  })
+  
+  observeEvent(input$sel_y, {
+    write_file()
+  })
+  
+  ## write a file
+  write_file <- function() {
+    if (filename() != "") {
+      output <- list(
+        data = input$sel_data,
+        x = input$sel_x,
+        y = input$sel_y
+      )
+      json_out <- toJSON(output, auto_unbox = TRUE, null = "null")
+      con <- file(filename(), open = "wt")
+      writeLines(json_out, con)
+      close(con)
+    }
+  }
+}
+
+ui <- fluidPage(
+  br(),
+  br(),
+  panel(heading = "Options", status = "primary",
+        selectizeInput("sel_data", "dataset", choices = c("iris", "mtcars")),
+        uiOutput("ui_axes")
+        )
+)
+
+shinyApp(ui, server)
+```
+
+## app_graphics/app.R
+
+```r
+## app_graphics
+## A simple app that draws a ggplot
+
+library(shiny)
+library(shinyWidgets)
+library(ggplot2)
+library(jsonlite)
+
+server <- function(input, output, session) {
+  
+  filename <- reactive({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query$file)) {
+      query$file
+    } else {
+      ""
+    }
+  })
+  
+  ## retrieve data from file
+  json_data <- reactiveFileReader(2000, session, filePath = filename, readFunc = function(filePath) {
+    tryCatch({
+      con <- file(filePath)
+      file_contents <- readLines(con)
+      close(con)
+      file_contents
+    },
+    error = function(e) NA
+    )
+  })
+  
+  output$plt <- renderPlot({
+    req(json_data())
+    
+    ## check all plotting parameters are present
+    params <- c("data", "x", "y")
+    data <- fromJSON(json_data())
+    if (all(sapply(params, function(x) !is.null(data[[x]])))) {
+      ggplot(get(data[["data"]]), aes(x = .data[[data[["x"]]]], y = .data[[data[["y"]]]])) +
+        geom_point() +
+        labs(title = paste0("Plot data = ", data[["data"]]),
+             x = data[["x"]], 
+             y = data[["y"]])
+    }
+
+  })
+  
+}
+
+ui <- fluidPage(
+  br(),
+  br(),
+  panel(heading = "Graphics", status = "primary",
+        plotOutput("plt")
+  )
+)
+
+shinyApp(ui, server)
+```
+
+## app_details/app.R
+
+```r
+## app_details
+## A simple app that lists some details
+
+library(shiny)
+library(shinyWidgets)
+library(jsonlite)
+
+server <- function(input, output, session) {
+  
+  filename <- reactive({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query$file)) {
+      query$file
+    } else {
+      ""
+    }
+  })
+  
+  ## retrieve data from file
+  json_data <- reactiveFileReader(2000, session, filePath = filename, readFunc = function(filePath) {
+    tryCatch({
+      con <- file(filePath)
+      file_contents <- readLines(con)
+      close(con)
+      file_contents
+    },
+    error = function(e) NA
+    )
+  })
+  
+  output$txt_details <- renderPrint({
+    prettify(json_data())
+  })
+  
+}
+
+ui <- fluidPage(
+  br(),
+  br(),
+  panel(heading = "Output", status = "primary",
+        verbatimTextOutput("txt_details")
+  )
+)
+
+shinyApp(ui, server)
+```
+
+# Output
+
+When running the `launcher` app the following window first opens:
+
+{{< figure src="/images/post-images/2021-08-30-multiwindow_app/multiwindow_01.png" >}}
+
+This automatically triggers opening of the other three shiny apps (app_options, app_graphics and app_details).  The windows for these apps are sized and located according to the `app_windows` data frame in launcher/app.R as follows:
+
+```r
+  ## define app windows
+  app_windows <- data.frame(
+    name = c("app_options", "app_graphics", "app_details"),
+    app = c("app_options", "app_graphics", "app_details"),
+    height = c(0.25, 0.4, 0.25),
+    width = c(0.095, 0.2, 0.095),
+    left = c(0.02, 0.02, 0.125),
+    top = c(0.02, 0.33, 0.02),
+    closable = c(TRUE, TRUE, TRUE),
+    stringsAsFactors = FALSE
+  )
+  app_windows$url <- paste0(url_base, app_windows$app, "/?file=", jsonfile)
+```
+
+Here, the sizes and dimensions are based on screen fractions so app_options is 25% of the screen height and 9.5% of the screen width, and is placed 2% from the left of the screen and 2% from the top of the screen.
+
+The resulting screen capture of app_options, app_graphics and app_details looks like this:
+
+{{< figure src="/images/post-images/2021-08-30-multiwindow_app/multiwindow_02.png" >}}
+
+When an option in app_options is changed, the json file is update and the `reactiveFileReader` in app_graphics and app_details triggers an update.  All three apps are independent but connected through the json file.
+
+Here's a screenshot after updating:
+
+{{< figure src="/images/post-images/2021-08-30-multiwindow_app/multiwindow_03.png" >}}
+
