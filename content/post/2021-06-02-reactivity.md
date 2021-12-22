@@ -3,14 +3,16 @@ author = "Harvey"
 title = "Shiny Reactivity"
 date = "2021-06-02"
 description = "List of Reactives vs Reactive List"
-tags = ["R", "shiny"]
-draft = true
+tags = ["R", "shiny", "Shiny modules"]
+draft = false
+codeMaxLines = 70
 +++
 
 Examples of passing a list of reactives, reactiveValues list and reactiveValues to a shiny module.  This helps explain reactivity when passing values to a shiny module.  In each case we pass a `value A` which triggers `mod A` and `value B` which triggers `mod B`.  The code below and output demonstrates which outputs in the shiny module are updated upon changing a value in the main app.  
-Example 1 - list of reactives.  Two reactives passed to shiny module in a list.  When `value A` is updated only `mod A` updates.
-Example 2 - ReactiveValues List.  Two reactives passed to shiny module in a reactive list.  The individual components are not reactive themselves but the list is.  This means that when one list item is changed it triggers updates for each output that implements any member of the list.  When `value A` is updated, both `mod A` and `mod B` update.
-Example 3 - ReactiveValues.  Two reactiveValues passed to shiny module.  When `value A` is updated only `mod A` updates.
+
+-  Example 1 - list of reactives.  Two reactives passed to shiny module in a list.  When `value A` is updated only `mod A` updates.  
+-  Example 2 - ReactiveValues List.  Two reactives passed to shiny module in a reactive list.  The individual components are not reactive themselves but the list is.  This means that when one list item is changed it triggers updates for each output that implements any member of the list.  When `value A` is updated, both `mod A` and `mod B` update.  
+-  Example 3 - ReactiveValues.  Two reactiveValues passed to shiny module.  When `value A` is updated only `mod A` updates.
 
 
 ## Example 1 - List of Reactives
