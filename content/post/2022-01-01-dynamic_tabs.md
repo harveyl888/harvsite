@@ -4,10 +4,14 @@ title = "Shiny dynamic tabs"
 date = "2022-01-01"
 description = "Extend and reduce tab count in shiny app"
 tags = ["R", "shiny"]
-draft = true
+draft = false
 +++
 
+{{< figure src="/images/post-images/2022-01-01-dynamic_tabs/dynamic_tabs_03.png" >}}
+
 This is a simple shiny app that demonstrates dynamic shiny tabs.  Each tab contains a shiny module which returns a series of data parameters and tabs can be added and removed.  In one use-case this construct was used in three higher level tabs, returning a complex, nested structure.
+
+Code is available at: https://github.com/harveyl888/shiny_dynamic_tabs
 
 The concept is fairly simple - upon start up a tabsetPanel is built with a button prepended before the first tab.  When clicked, this button adds a new tab containing a shiny module (the tab also contains a close button).  The shiny module returns a series of data and these data, from all tabs, are stored in a reaciveValues list (`rv$return_data`).  As tabs are added, deleted or their content changed, the contents of `rv$return_data` updates.
 
@@ -105,4 +109,13 @@ When the close icon is clicked the following observeEvent is triggered, removing
   })
 ```
 
+## Screen Captures
 
+Upon start up, the tabPanel is built with a button and a single tab.  Data returned is printed to the right of the tabPanel.
+{{< figure src="/images/post-images/2022-01-01-dynamic_tabs/dynamic_tabs_01.png" >}}
+
+Adding additional tabs and changing their content updates the returned data.
+{{< figure src="/images/post-images/2022-01-01-dynamic_tabs/dynamic_tabs_02.png" >}}
+
+Removing tab #2 updates the returned data.
+{{< figure src="/images/post-images/2022-01-01-dynamic_tabs/dynamic_tabs_03.png" >}}
