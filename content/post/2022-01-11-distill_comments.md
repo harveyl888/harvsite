@@ -278,11 +278,156 @@ There are a few things to note in the code below.
 
     Learn more about using Distill at <https://rstudio.github.io/distill>.
 
+    ```{r}
+    comment_form(page_id = page_id, site_id = page_id)
+    ```
+
     <script>
     update_comments(page_id = `r page_id`, site_id = `r site_id`)
     </script>
 
-    ```{r}
-    comment_form(page_id = page_id, site_id = page_id)
-    ```
+```
+
+### css
+
+The style.css file takes care of styling comments.  The file is included below.
+
+```css
+.comments {
+  padding: 20px 10px;
+  margin: 0;
+}
+
+.form-contents {
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.form-details {
+    display: flex;
+    flex-direction: column;
+    flex: 2 1 auto;
+}
+
+.form-details input[type=text] {
+    border-top: 0px;
+    border-bottom: 1px solid #ccc;
+    border-left: 0px;
+    border-right: 0px;
+    outline: 0px;
+    padding: 0;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-weight: normal;
+}
+
+.form-details input[type=text]:focus {
+    border-color: #04AA6D;
+    border-width: 2px;
+}
+
+.form-contents .comment-pic {
+    display: flex;
+    font-size: 3em;
+    align-self: flex-end;
+}
+
+.button-container {
+    display: flex;
+    align-self: flex-end;
+}
+
+.comment-comments input[type=text]{
+    width: 90%;
+}
+
+.comment-short {
+    width: 50%;
+}
+
+.comment-short input[type=text]{
+    width: 80%;
+}
+
+.comment-user {
+    display: flex;
+    flex-direction: row;
+}
+
+.form-container input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-container input[type=submit] {
+  margin: 2px 5px;
+  float: right;
+}
+
+.form-container input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.comment-header {
+  font-size: 1.5em;
+  line-height: 1.5em;
+  font-weight: 400;
+}
+
+.comment-holder {
+  margin-top: 50px;
+}
+
+ul.comment-list {
+  list-style: none;
+  position: relative;
+  padding: 0;
+}
+
+li.comment-item {
+  padding: 20px 10px;
+  margin: 20px 0;
+  position: relative;
+  width: 100%;
+  background-color: #efefef;
+}
+
+.comment-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.comment-name {
+  font-size: 1.5em;
+  font-weight: 400;
+  margin: 5px 0;
+  color: #5d5d5d;
+  align-self: flex-start;
+}
+
+.date-holder {
+  color: #5d5d5d;
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.comment-date {
+  font-size: 1em;
+  font-weight: 400;
+  margin: 5px 0 5px 10px;
+}
+
+.comment-text {
+  display: block;
+  margin: 0 0 10px 0;
+}
 ```
