@@ -3,7 +3,7 @@ author = "Harvey"
 title = "{distill} Comments"
 date = "2022-01-11"
 description = "Including a comments section in {distill} pages"
-tags = ["R", "javascript"]
+tags = ["R", "javascript", "rsconnect"]
 draft = true
 +++
 

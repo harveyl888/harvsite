@@ -3,7 +3,7 @@ author = "Harvey"
 title = "Multiwindow App - RStudio Connect and pins"
 date = "2021-11-16"
 description = "Building a multiwindow shiny app running on RStudio Connect with pins"
-tags = ["R", "shiny", "javascript"]
+tags = ["R", "shiny", "javascript", "rsconnect"]
 codeMaxLines = 15
 +++
 
