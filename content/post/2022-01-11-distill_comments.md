@@ -250,29 +250,39 @@ There are a few things to note in the code below.
 
 ```r
     ---
-    title: "About this site"
+    title: "test article"
     description: |
-      Some additional details about the website
+      A short description of the post.
+    author:
+      - name: Harvey Lieberman
+    date: 01-11-2022
+    output:
+      distill::distill_article:
+        self_contained: false
     ---
+
 
     ```{r setup, include=FALSE}
     knitr::opts_chunk$set(echo = FALSE)
     ```
 
     ```{r}
-    page_id <- 1
+    page_id <- 2
     site_id <- 10
     source(here::here("comment.R"))
     htmltools::includeCSS(here::here("style.css"))
     htmltools::includeScript(here::here("comments.js"))
     ```
 
+    Distill is a publication format for scientific and technical writing, native to the web.
+
+    Learn more about using Distill at <https://rstudio.github.io/distill>.
+
     <script>
     update_comments(page_id = `r page_id`, site_id = `r site_id`)
     </script>
 
     ```{r}
-    comment_form(page_id = page_id, site_id = site_id)
+    comment_form(page_id = page_id, site_id = page_id)
     ```
 ```
-
