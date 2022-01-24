@@ -11,9 +11,14 @@ Following on from a post on [including a contact form on a {distill} site hosted
 
 Commenting consists of two parts - a way to retrieve comments that belong to a page and a form to enter new comments.
 
+In this implementation I connect a {distill} blog to a {pins} data frame via a {plumber} API.  The API consists of GET and POST endpoints and the blog, pin board and plumber API all sit on the same RStudio Connect instance.
+
+{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_01.png" >}}
+
 ## New Comment Form
 
-The function `comment_form` takes `site_id` and `page_id` arguments and returns an HTML form.  The form captures a comment and optional user name and passes each of these, along with `site_id` and `page_id` to a plumber API.  The plumber API updates a pinned data frame with the new comment.  In fact, a javascript function intercepts the submit button triggering an update of the page comments after adding the new one.  This allows a new comment to be added without having to refresh the page manually.  
+The function `comment_form` takes `site_id` and `page_id` arguments and returns an HTML form.  `site_id` is a unique identifier for a website and `page_id` is a unique identifier for a page on that site.  
+The form captures a comment and optional user name and passes each of these, along with `site_id` and `page_id` to a plumber API.  The plumber API updates a *pinned* data frame with the new comment.  In fact, a javascript function intercepts the submit button triggering an update of the page comments after adding the new one.  This allows a new comment to be added without having to refresh the page manually.  
 In addition, the `comment_form` function adds a div with the id `rtncomments` which is a placeholder to display comments.  
 The `comment_form` R function along with the javascript eventListener are shown below.  In the code, *<rsconnect URL>/addcomment* refers to the plumber API endpoint for adding a new comment.  
 
