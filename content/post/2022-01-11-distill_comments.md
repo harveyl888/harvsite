@@ -11,7 +11,7 @@ Following on from a post on [including a contact form on a {distill} site hosted
 
 Commenting consists of two parts - a way to retrieve comments that belong to a page and a form to enter new comments.
 
-In this implementation I connect a {distill} blog to a {pins} data frame via a {plumber} API.  The API consists of GET and POST endpoints and the blog, pin board and plumber API all sit on the same RStudio Connect instance.
+In this implementation I connect a {distill} blog to a {pins} data frame via a {plumber} API.  The pinned data frame holds the comments and comments can be added or retrieved through the API.  The distill blog posts call javascript functions to post and retrieve comments.  The blog, pin board and plumber API all sit on the same RStudio Connect instance.
 
 {{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_01.png" >}}
 
@@ -239,3 +239,40 @@ function(site = 0, page = 0) {
   
 }
 ```
+
+### Webpage / Blog Post with Comments
+
+Any page with comments follows the same approach.  The page includes the javascript functions listed above (*comments.js*), some css styling (*style.css*, see below) and the `comment_form` function (sourced from *comment.R*).  
+There are a few things to note in the code below.  
+
+-  The two variables, `site_id` and `page_id`, are needed to identify comments for the webpage.  Ideally, we'd define them in the yaml header and use them as parameters in the markdown text.  Unfortunately, when using `render_site`, markdown parameters are not rendered (see [open GitHub issue](https://github.com/rstudio/rmarkdown/issues/903)).  `site_id` and `page_id` are therefore defined within a chunk.
+-  The javascript function `update_comments` does not lie in a javascript chunk (you can include javascript in rmarkdown by including a chunk with **js** instead of **r** in the chunk header).  Instead, the code is placed within a `<script>` tag.  When processed this way, we can access variables (`site_id` and `page_id`) stored in **r** language chunks earlier in the document.  
+
+```r
+    ---
+    title: "About this site"
+    description: |
+      Some additional details about the website
+    ---
+
+    ```{r setup, include=FALSE}
+    knitr::opts_chunk$set(echo = FALSE)
+    ```
+
+    ```{r}
+    page_id <- 1
+    site_id <- 10
+    source(here::here("comment.R"))
+    htmltools::includeCSS(here::here("style.css"))
+    htmltools::includeScript(here::here("comments.js"))
+    ```
+
+    <script>
+    update_comments(page_id = `r page_id`, site_id = `r site_id`)
+    </script>
+
+    ```{r}
+    comment_form(page_id = page_id, site_id = site_id)
+    ```
+```
+
