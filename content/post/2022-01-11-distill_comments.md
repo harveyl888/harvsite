@@ -164,7 +164,7 @@ function update_comments(page_id, site_id) {
 
 The {distill} blog pages are connected to the comments via a plumber API.  The API contains two endpoints, a POST endpoint, `addcomment` which is used to add a new comment and a GET endpoint, `page_comments` which is used to retrieve comments for a specific page.  The comments themselves are stored in a data frame which is accessible via the {pins} package.  This allows mutiple sites to use the same data frame.  
 Once again, *<rsconnect URL>* refers to the RStudio Connect URL and, *<account id>* is the account associated with the pin.  
-In the code below, `board_register("rsconnect", server = "<rsconnect URL>, account = "<account id>", key = connectAPIKey)` registers a pin board which holds a pin called `blog_comments`, a data frame with columns for site_id, page_id, user_id, date and comment.  The date is a timestamp set when the comment is added.
+In the code below, `board_register("rsconnect", server = "<rsconnect URL>, account = "<account id>", key = connectAPIKey)` registers a pin board which holds a pin called `blog_comment_table`, a data frame with columns for site_id, page_id, user_id, date and comment.  The date is a timestamp set when the comment is added.
 
 ```r
 library(plumber)
@@ -194,7 +194,7 @@ function(req) {
                  key = connectAPIKey)
 
   ## check for comments table and create if not present
-  if (nrow(pins::pin_find("blog_comments", board = "rsconnect")) == 0) {
+  if (nrow(pins::pin_find("blog_comment_table", board = "rsconnect")) == 0) {
     comments <- tibble(
       site_id = body$site_id,
       page_id = body$page_id,
@@ -203,7 +203,7 @@ function(req) {
       comment = body$comment
     )
   } else {
-    comments <- pins::pin_get(name = "blog_comments", board = "rsconnect") %>%
+    comments <- pins::pin_get(name = "blog_comment_table", board = "rsconnect") %>%
       add_row(
         site_id = body$site_id,
         page_id = body$page_id,
@@ -212,7 +212,7 @@ function(req) {
         comment = body$comment
       )
   }
-  pins::pin(comments, name = "blog_comments", board = "rsconnect")
+  pins::pin(comments, name = "blog_comment_table", board = "rsconnect")
   
 }
 
@@ -233,7 +233,7 @@ function(site = 0, page = 0) {
                  key = connectAPIKey)
   
   ## get table and filter
-  pins::pin_get(name = "blog_comments", board = "rsconnect") %>%
+  pins::pin_get(name = "blog_comment_table", board = "rsconnect") %>%
     dplyr::filter(site_id == site & page_id == page) %>%
     dplyr::arrange(desc(date))
   
@@ -246,16 +246,16 @@ Any page with comments follows the same approach.  The page includes the javascr
 There are a few things to note in the code below.  
 
 -  The two variables, `site_id` and `page_id`, are needed to identify comments for the webpage.  Ideally, we'd define them in the yaml header and use them as parameters in the markdown text.  Unfortunately, when using `render_site`, markdown parameters are not rendered (see [open GitHub issue](https://github.com/rstudio/rmarkdown/issues/903)).  `site_id` and `page_id` are therefore defined within a chunk.
--  The javascript function `update_comments` does not lie in a javascript chunk (you can include javascript in rmarkdown by including a chunk with **js** instead of **r** in the chunk header).  Instead, the code is placed within a `<script>` tag.  When processed this way, we can access variables (`site_id` and `page_id`) stored in **r** language chunks earlier in the document.  
+-  The javascript function `update_comments` does not sit in a javascript chunk (you can include javascript in rmarkdown by including a chunk with **js** instead of **r** in the chunk header).  Instead, the code is placed directly within a `<script>` tag.  When processed this way, we can access variables (`site_id` and `page_id`) stored in **r** language chunks earlier in the document.  
 
 ```r
     ---
-    title: "test article"
+    title: "test article number 1"
     description: |
-      A short description of the post.
+      A first test article with comments.
     author:
       - name: Harvey Lieberman
-    date: 01-11-2022
+    date: 01-10-2022
     output:
       distill::distill_article:
         self_contained: false
@@ -267,19 +267,17 @@ There are a few things to note in the code below.
     ```
 
     ```{r}
-    page_id <- 2
-    site_id <- 10
+    page_id <- 1
+    site_id <- 101
     source(here::here("comment.R"))
     htmltools::includeCSS(here::here("style.css"))
     htmltools::includeScript(here::here("comments.js"))
     ```
 
-    Distill is a publication format for scientific and technical writing, native to the web.
-
-    Learn more about using Distill at <https://rstudio.github.io/distill>.
+    This is a first blog post with comments.
 
     ```{r}
-    comment_form(page_id = page_id, site_id = page_id)
+    comment_form(page_id = page_id, site_id = site_id)
     ```
 
     <script>
