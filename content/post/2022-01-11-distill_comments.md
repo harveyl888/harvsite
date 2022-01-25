@@ -163,8 +163,12 @@ function update_comments(page_id, site_id) {
 ## plumber API
 
 The {distill} blog pages are connected to the comments via a plumber API.  The API contains two endpoints, a POST endpoint, `addcomment` which is used to add a new comment and a GET endpoint, `page_comments` which is used to retrieve comments for a specific page.  The comments themselves are stored in a data frame which is accessible via the {pins} package.  This allows mutiple sites to use the same data frame.  
-Once again, *<rsconnect URL>* refers to the RStudio Connect URL and, *<account id>* is the account associated with the pin.  
-In the code below, `board_register("rsconnect", server = "<rsconnect URL>, account = "<account id>", key = connectAPIKey)` registers a pin board which holds a pin called `blog_comment_table`, a data frame with columns for site_id, page_id, user_id, date and comment.  The date is a timestamp set when the comment is added.
+
+In the code below, `board_register("rsconnect", server = "<rsconnect URL>, account = "<account id>", key = connectAPIKey)` registers a pin board which holds a pin called `blog_comment_table`.  Once again, *<rsconnect URL>* refers to the RStudio Connect URL and, *<account id>* is the account associated with the pin.  An RStudio Connect API key must be defined and exposed as an environment variable (see below).
+
+{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_04.png" width="75%" >}}
+
+`blog_comment_table` is a data frame with columns for site_id, page_id, user_id, date and comment.  The date is a timestamp set when the comment is added.
 
 ```r
 library(plumber)
