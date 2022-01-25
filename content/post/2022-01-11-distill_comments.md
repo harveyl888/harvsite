@@ -439,8 +439,8 @@ li.comment-item {
 After adding a couple of sample blog posts and a few comments the output is shown below.  Here, I've added two comments to the first blog post and one to the second.  The data frame retrieved from {pins} appears as follows:
 
  | site_id | page_id | user_name | date | comment |
- | -- | --  | -- | -- | -- |
- | <chr> | <chr> | <chr> | <dttm> | <chr> |
+ | :---: | :---:  | :--- | :--- | :--- |
+ | \<chr\> | \<chr\> | \<chr\> | \<dttm\> | \<chr\> |
  | 101 | 1 | Harvey | 2022-01-10 22:24:00 | This is my first blog comment! |
  | 101 | 1 | Harvey | 2022-01-10 22:24:34 | Blog comments can take a little time to appear once entered - possibly an artefact of RStudio Connect or {pins} |
  | 101 | 2 | Harvey | 2022-01-10 22:25:17 | Here's a comment for blog entry #2 |
@@ -452,4 +452,5 @@ After adding a couple of sample blog posts and a few comments the output is show
 
 ## Issues to Resolve
 
-The process is a little slow.  At this point I'm not sure if it is related to the use of fetch or plumber.  This is a first proof-of-concept and requires some work but the principle works well.
+The refresh process is a little slow, sometimes taking a several seconds to load comments.  At this point I'm not sure if it is related to the use of fetch or plumber.  
+This is a first proof-of-concept and certainly requires some more work but the principle works well.
