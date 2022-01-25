@@ -105,7 +105,7 @@ window.addEventListener("load", function() {
 });
 ```
 
-### Existing Comments
+## Existing Comments
 
 To retrieve existing comments we use a javascript function to build an HTML output.  The function takes `site_id` and `page_id` arguments and calls a plumber API which returns comments belonging to the page in json form.  
 Here, *<rsconnect URL>/page_comments* refers to the plumber API endpoint for retrieving comments.  The search parameters `site_id` and `page_id` are appended to the url so that we can limit the returning data to a specific page on a specific site.  Since we are using fetch, the webpage and API must live on the same RStudio Connect instance.  
@@ -160,7 +160,7 @@ function update_comments(page_id, site_id) {
 };
 ```
 
-### plumber API
+## plumber API
 
 The {distill} blog pages are connected to the comments via a plumber API.  The API contains two endpoints, a POST endpoint, `addcomment` which is used to add a new comment and a GET endpoint, `page_comments` which is used to retrieve comments for a specific page.  The comments themselves are stored in a data frame which is accessible via the {pins} package.  This allows mutiple sites to use the same data frame.  
 Once again, *<rsconnect URL>* refers to the RStudio Connect URL and, *<account id>* is the account associated with the pin.  
@@ -240,7 +240,7 @@ function(site = 0, page = 0) {
 }
 ```
 
-### Webpage / Blog Post with Comments
+## Webpage / Blog Post with Comments
 
 Any page with comments follows the same approach.  The page includes the javascript functions listed above (*comments.js*), some css styling (*style.css*, see below) and the `comment_form` function (sourced from *comment.R*).  
 There are a few things to note in the code below.  
@@ -286,7 +286,7 @@ There are a few things to note in the code below.
 
 ```
 
-### css
+## css
 
 The style.css file takes care of styling comments.  The file is included below.
 
@@ -429,3 +429,23 @@ li.comment-item {
   margin: 0 0 10px 0;
 }
 ```
+
+## Output
+
+After adding a couple of sample blog posts and a few comments the output is shown below.  Here, I've added two comments to the first blog post and one to the second.  The data frame retrieved from {pins} appears as follows:
+
+ | site_id | page_id | user_name | date | comment |
+ | -- | --  | -- | -- | -- |
+ | <chr> | <chr> | <chr> | <dttm> | <chr> |
+ | 101 | 1 | Harvey | 2022-01-10 22:24:00 | This is my first blog comment! |
+ | 101 | 1 | Harvey | 2022-01-10 22:24:34 | Blog comments can take a little time to appear once entered - possibly an artefact of RStudio Connect or {pins} |
+ | 101 | 2 | Harvey | 2022-01-10 22:25:17 | Here's a comment for blog entry #2 |
+
+{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_02.png" >}}
+
+{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_03.png" >}}
+
+
+## Issues to Resolve
+
+The process is a little slow.  At this point I'm not sure if it is related to the use of fetch or plumber.  This is a first proof-of-concept and requires some work but the principle works well.
