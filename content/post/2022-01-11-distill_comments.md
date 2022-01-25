@@ -441,9 +441,9 @@ After adding a couple of sample blog posts and a few comments the output is show
  | 101 | 1 | Harvey | 2022-01-10 22:24:34 | Blog comments can take a little time to appear once entered - possibly an artefact of RStudio Connect or {pins} |
  | 101 | 2 | Harvey | 2022-01-10 22:25:17 | Here's a comment for blog entry #2 |
 
-{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_02.png" >}}
+{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_02.png" width="75%" >}}
 
-{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_03.png" >}}
+{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_03.png" width="75%" >}}
 
 
 ## Issues to Resolve
