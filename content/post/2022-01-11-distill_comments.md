@@ -4,7 +4,6 @@ title = "{distill} Comments"
 date = "2022-01-11"
 description = "Including a comments section in {distill} pages"
 tags = ["R", "javascript", "rsconnect"]
-draft = true
 +++
 
 Following on from a post on [including a contact form on a {distill} site hosted on RStudio Connect](/post/2021-09-08-distill_contact_form/), here's a post on how to include comments in blog posts.
