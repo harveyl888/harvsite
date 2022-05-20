@@ -220,3 +220,136 @@ function update_comments_dt(page_id, site_id) {
   
 };
 ```
+
+## plumber API
+
+As [previously](/post/2022-01-11-distill_comments/), the distill blog pages via a plumber API.  The API contains two endpoints, a POST endpoint, `addcomment_dt` which is used to add a new comment and a GET endpoint, `page_comments_dt` which is used to retrieve comments for a specific page.  The comments are stored in a hierarchical data.tree format which is accessible via the {pins} package.
+
+In the code below, `board_register("rsconnect", server = "<rsconnect URL>, account = "<account id>", key = connectAPIKey)` registers a pin board which holds a pin called `blog_comment_table+dt`.  *<rsconnect URL>* refers to the RStudio Connect URL and, *<account id>* is the account associated with the pin.  An RStudio Connect API key must be defined and exposed as an environment variable (see below).
+
+{{< figure src="/images/post-images/2022-01-11-distill_comments/distill_comments_04.png" width="75%" >}}
+
+`addcomment_dt` adds the comment to a `parent id` which sits under a `page id`, that is, in turn, under a `site id`.  Each comment is given a unique reference id, used as an identifier when comments or replies are added.
+
+`page_comments_dt` retrieves a hierarchy of comments and replies for a specified `site id` and `page id`.  The data.tree obtained is returned as a list.
+
+
+```r
+library(plumber)
+library(jsonlite)
+library(pins)
+library(lubridate)
+library(data.tree)
+library(stringi)
+
+#* Add a comment to the comment table
+#* 
+#* @param req request body
+#* 
+#* @serializer unboxedJSON
+#* 
+#* @post /addcomment_dt
+function(req) {
+  
+  ## get the message body
+  body <- jsonlite::fromJSON(req$postBody)
+  
+  ## RSConnect API Key
+  connectAPIKey <- Sys.getenv("CONNECT_API_KEY")
+  
+  ## register rsconnect pin board
+  board_register("rsconnect",
+                 server = "<rsconnect URL>",
+                 account = "<account id>",
+                 key = connectAPIKey)
+  
+  ## generate a ref for the comment
+  comment_ref <- stringi::stri_rand_strings(n = 1, length = 12)
+  
+  comment <- c(
+    body,
+    list(
+      ref = comment_ref,
+      date = lubridate::now()
+    )
+  )
+  
+  ## check for comments table and create if not present
+  if (nrow(pins::pin_find("blog_comment_table_dt", board = "rsconnect")) == 0) {
+    comment_tree <- Node$new("comments")
+  } else {
+    comment_tree <- pins::pin_get(name = "blog_comment_table_dt", board = "rsconnect") 
+  }
+  
+  ## does site_id child node exist?
+  if (is.null(FindNode(comment_tree, comment$site_id))) {
+    comment_tree$AddChild(comment$site_id)
+  }
+  
+  ## does page_id child node exist?
+  site_node <- FindNode(comment_tree, comment$site_id)
+  if (is.null(FindNode(site_node, comment$page_id))) {
+    site_node$AddChild(comment$page_id)
+  }
+  
+  ## add new comment
+  if (!is.na(comment$parent_ref)) {
+    parent_node <- FindNode(site_node, comment$parent_ref)
+  } else {
+    parent_node <- FindNode(site_node, comment$page_id)
+  }
+  do.call(parent_node$AddChild, c(list(name = comment$ref), comment))
+  
+  pins::pin(comment_tree, name = "blog_comment_table_dt", board = "rsconnect")
+  
+  return(comment)
+}
+
+
+#* Retrieve all comments for a page
+#* 
+#* @param site site id
+#* @param page page id
+#* 
+#* @serializer unboxedJSON
+#* 
+#* @get /page_comments_dt
+function(site = "site_01", page = "page_01") {
+  
+  ## RSConnect API Key
+  connectAPIKey <- Sys.getenv("CONNECT_API_KEY")
+  
+  ## register rsconnect pin board
+  board_register("rsconnect", 
+                 server = "https://rsconnect-prod.dit.eu.novartis.net",
+                 account = "liebeha1",
+                 key = connectAPIKey)
+  
+  ## get table and filter
+  rtn_subtree <- list()
+  if (nrow(pins::pin_find("blog_comment_table_dt", board = "rsconnect")) > 0) {
+    
+    ## get pinned comment tree
+    comment_tree <- pins::pin_get(name = "blog_comment_table_dt", board = "rsconnect")
+    
+    ## is site in comment tree?
+    if (!is.null(FindNode(comment_tree, site))) {
+      
+      ## is page in comment tree and does it have comments?
+      found_page_comments <- FindNode(comment_tree[[site]], page)
+      if (!is.null(found_page_comments)) {
+        rtn_subtree <- as.list(found_page_comments, 
+                               mode = "explicit", unname = TRUE)
+      }
+      
+    }
+  }
+  return(rtn_subtree)
+}
+```
+
+{{< figure src="/images/post-images/2022-03-05-distill_comments_replies/distill_comments_replies_02.png" caption="data.tree with comments illustrating hierarchy.  Data are nested as comments, replies, replies-to-replies, etc.  For example, page_01 contains two comments: R8VkpR08pQTA (with a reply cVGBQzLRV9pa) and lHcoISddQbJp">}}
+
+{{< figure src="/images/post-images/2022-03-05-distill_comments_replies/distill_comments_replies_03.png" caption="output from data.tree illustrating the metadata held at each node">}}
+
+
