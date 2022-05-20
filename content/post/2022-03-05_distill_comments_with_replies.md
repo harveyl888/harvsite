@@ -352,4 +352,235 @@ function(site = "site_01", page = "page_01") {
 
 {{< figure src="/images/post-images/2022-03-05-distill_comments_replies/distill_comments_replies_03.png" caption="output from data.tree illustrating the metadata held at each node">}}
 
+## Webpage / Blog Post with Comments
 
+Any page with comments follows the same approach.  The page includes the javascript functions listed above (*comments.js*), some css styling (*style.css*, see below) and the `comment_form` function (sourced from *comment.R*).  
+There are a few things to note in the code below.  
+
+-  The two variables, `site_id` and `page_id`, are needed to identify comments for the webpage.  Ideally, we'd define them in the yaml header and use them as parameters in the markdown text.  Unfortunately, when using `render_site`, markdown parameters are not rendered (see [open GitHub issue](https://github.com/rstudio/rmarkdown/issues/903)).  `site_id` and `page_id` are therefore defined within a chunk.
+-  The javascript function `update_comments_dt` does not sit in a javascript chunk (you can include javascript in rmarkdown by including a chunk with **js** instead of **r** in the chunk header).  Instead, the code is placed directly within a `<script>` tag.  When processed this way, we can access variables (`site_id` and `page_id`) stored in **r** language chunks earlier in the document.  
+
+```r
+    ---
+    title: "article 1"
+    description: |
+      Blog post #1.
+    author:
+      - name: Harvey Lieberman
+    date: 03-03-2022
+    output:
+      distill::distill_article:
+        self_contained: false
+    ---
+
+
+    ```{r setup, include=FALSE}
+    knitr::opts_chunk$set(echo = FALSE)
+    ```
+
+    ```{r}
+    ## define site and page
+    page_id <- "page_01"
+    site_id <- "site_02"
+
+    ## add function, css and js to page
+    source(here::here("comment_dt.R"))
+    htmltools::includeCSS(here::here("style.css"))
+    htmltools::includeScript(here::here("comment_dt.js"))
+    ```
+
+    This is a typical blog post but with a comment section added.  
+    Comments include nested replies.
+
+
+    ```{r}
+    ## include comment form
+    comment_form_dt(page_id = page_id, site_id = site_id)
+
+    ## js below placed in script tags so that R variable can be included
+    ```
+
+    <script>
+    update_comments_dt(page_id = "`r page_id`", site_id = "`r site_id`")
+    </script>
+
+```
+
+## css
+
+The style.css file takes care of styling comments.  The file is included below.
+
+```css
+.comments {
+  padding: 20px 10px;
+  margin: 0;
+}
+
+.form-container input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-container input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.comment-header {
+  font-size: 1.5em;
+  line-height: 1.5em;
+  font-weight: 400;
+  margin-block-start: 1.5em;
+  margin-block-end: 1.5em;
+}
+
+.comment-header-margin-narrow {
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+}
+
+.form-contents {
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.form-contents .comment-pic {
+    display: flex;
+    font-size: 3em;
+    align-self: flex-end;
+}
+
+.form-details {
+    display: flex;
+    flex-direction: column;
+    flex: 2 1 auto;
+}
+
+.form-details input[type=text] {
+    border-top: 0px;
+    border-bottom: 1px solid #ccc;
+    border-left: 0px;
+    border-right: 0px;
+    outline: 0px;
+    padding: 0;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-weight: normal;
+}
+
+.form-details input[type=text]:focus {
+    border-color: #04AA6D;
+    border-width: 2px;
+}
+
+.comment-comments input[type=text]{
+    width: 90%;
+}
+
+.comment-user {
+    display: flex;
+    flex-direction: row;
+}
+
+.comment-short {
+    width: 50%;
+}
+
+.comment-short input[type=text]{
+    width: 80%;
+}
+
+.button-container {
+    display: flex;
+    align-self: flex-end;
+}
+
+.button-container input[type=submit] {
+  margin: 2px 5px;
+  float: right;
+}
+
+.comment-holder {
+  margin-top: 50px;
+}
+
+ul.comment-list {
+  list-style: none;
+  position: relative;
+  padding: 0;
+  border: 1px solid #ccc;
+}
+
+li.comment-item {
+  padding: 20px 10px;
+  margin: 20px 0;
+  position: relative;
+}
+
+.comment-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.comment-name {
+  font-size: 1.5em;
+  font-weight: 400;
+  margin: 5px 0;
+  color: #5d5d5d;
+  align-self: flex-start;
+}
+
+.date-holder {
+  color: #5d5d5d;
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.comment-date {
+  font-size: 1em;
+  font-weight: 400;
+  margin: 5px 0 5px 10px;
+}
+
+.comment-text {
+  display: block;
+  margin: 0 0 10px 0;
+}
+```
+
+## Output
+
+The follow screen captures illustrate adding comments and replies.
+
+### First comment add to a blog post
+
+{{< figure src="/images/post-images/2022-03-05-distill_comments_replies/distill_comments_replies_04.png" >}}
+
+### First comment add to a blog post
+
+{{< figure src="/images/post-images/2022-03-05-distill_comments_replies/distill_comments_replies_05.png" >}}
+
+### Adding a reply added to comment #1
+Clicking on the *Reply* dropdown opens a reply window
+
+{{< figure src="/images/post-images/2022-03-05-distill_comments_replies/distill_comments_replies_06.png" >}}
+
+### Once the reply is added it also includes a dropdown for nesting replies
+
+{{< figure src="/images/post-images/2022-03-05-distill_comments_replies/distill_comments_replies_07.png" >}}
+
+### Reply for comment #2 dropdown opened
+
+{{< figure src="/images/post-images/2022-03-05-distill_comments_replies/distill_comments_replies_08.png" >}}
+
+## Conclusion
+
+RStudio Connect can be used with {pins} to hold nested comments for blog pages.  This demonstrates the huge scope that RStudio Connect can play as a CMS.
