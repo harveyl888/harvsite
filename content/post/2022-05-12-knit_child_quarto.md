@@ -1,8 +1,8 @@
 +++
 author = "Harvey"
-title = "Excited for Quarto"
+title = "knitr::knit_child with Quarto"
 date = "2022-05-12"
-description = "Quarto is Coming"
+description = "knitr::knit_child with Quarto"
 tags = ["RMarkdown"]
 codeMaxLines = 30
 +++
