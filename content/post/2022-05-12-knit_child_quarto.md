@@ -51,7 +51,7 @@ Child document #1 - this is an RMarkdown child document
 
 ### Output
 
-{{< figure src="/images/post-images/2022-05-12-quarto/quarto_01.png" >}}
+{{< figure src="/images/post-images/2022-05-12-knit_child_quarto/quarto_01.png" >}}
 
 ## Quarto Version
 
@@ -119,4 +119,4 @@ Plot.plot({
 
 ### Output
 
-{{< figure src="/images/post-images/2022-05-12-quarto/quarto_02.png" >}}
+{{< figure src="/images/post-images/2022-05-12-knit_child_quarto/quarto_02.png" >}}
