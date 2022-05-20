@@ -4,7 +4,6 @@ title = "{distill} Comments With Replies"
 date = "2022-03-05"
 description = "Including a comments (plus replies) section in {distill} pages"
 tags = ["R", "javascript", "rsconnect"]
-draft = true
 +++
 
 This post expands upon the post on [{distill} Comments](/post/2022-01-11-distill_comments/).  It includes a method to reply to comments and store comments and replies in an hierarchical manner.
