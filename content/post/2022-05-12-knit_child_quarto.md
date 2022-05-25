@@ -59,7 +59,7 @@ Quarto child documents can be knitted in the same way as RMarkdown documents, us
 
 ### Main Document
 
-```r
+~~~r
 ---
 title: "Child docs"
 format: html
@@ -70,7 +70,7 @@ self-contained: true
 
 Quarto child documents are compatible with knitr::knit_child
 
-~~~{r}
+```{r}
 #| include: false
 library(knitr)
 
@@ -89,6 +89,7 @@ cat(a, sep="\n")
 
 ### Child Document 2
 
+~~~r
 ---
 title: "Untitled"
 format: html
@@ -112,8 +113,6 @@ Plot.plot({
     )
   ]}
 )
-
-
 ```
 ~~~
 
