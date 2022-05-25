@@ -36,7 +36,7 @@ cat(a, sep='\n')
 ```
 ~~~
 
-### Child Document 1
+### Child Document 1 (child_doc_01.Rmd)
 
 ```r
 ---
@@ -86,7 +86,7 @@ cat(a, sep="\n")
 ```
 ~~~
 
-### Child Document 2
+### Child Document 2 (child_doc_02.qmd)
 
 ~~~r
 ---
