@@ -73,7 +73,6 @@ Quarto child documents are compatible with knitr::knit_child
 ```{r}
 #| include: false
 library(knitr)
-
 ```
 
 ```{r, results='asis'}
@@ -97,12 +96,10 @@ format: html
 
 ## Child Doc 2
 
-~~~r
 Child document #2 - this is a quarto child document running {ojs} cell
 
 ```{r}
 ojs_define(data = mtcars)
-
 ```
 
 ```{ojs}
