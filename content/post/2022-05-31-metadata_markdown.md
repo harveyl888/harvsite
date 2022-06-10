@@ -4,7 +4,7 @@ title = "Adding and Retriving metadata in RMarkdown Documents"
 date = "2022-05-31"
 description = "Include abitrary metadata in RMarkdown documents"
 tags = ["R", "RMarkdown"]
-codeMaxLines = 30
+codeMaxLines = 100
 draft = true
 +++
 
@@ -63,4 +63,74 @@ $meta_list
 $meta_list$meta
 [1] "meta 1"
 ```
+
+## Searching metadata
+
+Once metadata are added to a series of documents, the metadata become searchable using the `yaml_front_matter` function.  By way of example, the functions below build and then search 1000 documents containing dummy data.  The time taken to search through 1000 documents on a 4-core laptop was 920 ms.
+
+```r
+## create Rmd with yaml
+create_rmd <- function(ref, name, folder) {
+
+  x <- glue::glue("
+---
+title: {name}
+author: Harvey
+short_title: {stringi::stri_rand_strings(1, 20)}
+reference: {ref}
+output: html_document
+params:
+    name: {name}
+meta_list:
+    meta: {ref}
+    text: {stringi::stri_rand_strings(1, 20)}
+---
+
+### {name}
+
+reference: `r rmarkdown::metadata$reference`
+
+{paste0(stringi::stri_rand_lipsum(5), collapse = '\n\n')}
+
+"
+  )
+
+  ## write Rmd file
+  con <- file(file.path("./docs", paste0("file_", name, ".Rmd")))
+  writeLines(x, con)
+  close(con)
+}
+
+## build a random set of documents
+build_docs <- function(n=10, folder) {
+  for (i in seq(n)) {
+    create_rmd(ref=i, name=paste("Document", i), folder=folder)
+  }
+}
+
+## search documents and return matches
+search_docs <- function(parameter, search_string, folder) {
+  files <- list.files(folder, pattern = "*.Rmd", full.names = TRUE, recursive = TRUE)
+  found <- c()
+  for (f in files) {
+    front_matter <- rmarkdown::yaml_front_matter(f)
+    if (grepl(search_string, front_matter[[parameter]])) found <- append(found, f)
+  }
+  return(found)
+}
+
+
+## create files
+build_docs(n=1000, folder="./docs")
+
+## search files
+microbenchmark::microbenchmark(
+  match_docs <- search_docs(parameter = "short_title",
+                            search_string = "ae",
+                            folder = "./docs/"),
+  times = 5)
+
+```
+
+When run, the search identified 5 documents that matched.
 
