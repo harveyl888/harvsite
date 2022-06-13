@@ -1,6 +1,6 @@
 +++
 author = "Harvey"
-title = "Adding and Retriving metadata in RMarkdown Documents"
+title = "Adding and Retrieving metadata in RMarkdown Documents"
 date = "2022-05-31"
 description = "Include abitrary metadata in RMarkdown documents"
 tags = ["R", "RMarkdown"]
