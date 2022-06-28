@@ -3,7 +3,7 @@ author = "Harvey"
 title = "Running SAS in Quarto"
 date = "2022-06-27"
 description = "Running SAS in Quarto"
-tags = ["Quarto"]
+tags = ["Quarto", "python"]
 codeMaxLines = 100
 draft = true
 +++
@@ -67,7 +67,7 @@ The _authinfo file is located in the home folder and, for SAS On Demand for Acad
 oda user <username> password <password>
 ```
 
-where _username_ and _password_ are the credentials to connect to oda.
+where _<username>_ and _<password>_ are the credentials to connect to oda.
 
 ### testing SAS in Quarto
 
