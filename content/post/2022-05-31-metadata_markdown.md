@@ -5,7 +5,7 @@ date = "2022-05-31"
 description = "Include abitrary metadata in RMarkdown documents"
 tags = ["R", "RMarkdown"]
 codeMaxLines = 100
-draft = true
+draft = false
 +++
 
 Metadata can be included in the yaml header of an RMarkdown document.  The yaml can store metadata in the `params` parameter or as individual yaml parameters.  For example, the RMarkdown file below adds some metadata parameters to the header: short_title, reference and meta_list.  The `rmarkdown` function `rmarkdown::metadata` can be used to access the yaml parameters.
