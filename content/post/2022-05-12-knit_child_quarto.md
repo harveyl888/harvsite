@@ -3,7 +3,7 @@ author = "Harvey"
 title = "knitr::knit_child with Quarto"
 date = "2022-05-12"
 description = "knitr::knit_child with Quarto"
-tags = ["RMarkdown"]
+tags = ["RMarkdown", "Quarto"]
 codeMaxLines = 30
 +++
 
