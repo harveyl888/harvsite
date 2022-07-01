@@ -38,7 +38,7 @@ I'm using SAS on demand and additional information on editing these two files is
 
 ### sascfg_personal.py
 
-Below is an example of a sascfg_personal.py (for a PC configuration).  Here we are specifying the connection to the SAS On Demand for Academics (oda) service, US Home Region 2.  The sasacfg_personal.py can be placed in the .config/saspy/ folder.
+Below is an example of a sascfg_personal.py (for a PC configuration).  Here we are specifying the connection to the SAS On Demand for Academics (oda) service, US Home Region 2.  The sasacfg_personal.py can be placed in the .config/saspy/ subfolder under the home folder.
 
 ```python
 SAS_config_names=['oda']
