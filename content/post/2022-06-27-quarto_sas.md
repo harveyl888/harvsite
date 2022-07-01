@@ -15,7 +15,7 @@ draft = false
 
 First install the `saspy` and the SAS kernel packages.
 
-```bash
+```
 pip install saspy
 pip install sas_kernel
 ```
