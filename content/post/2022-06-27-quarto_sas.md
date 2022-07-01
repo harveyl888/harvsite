@@ -5,7 +5,7 @@ date = "2022-06-27"
 description = "Running SAS in Quarto"
 tags = ["Quarto", "python"]
 codeMaxLines = 100
-draft = true
+draft = false
 +++
 
 [Quarto](https://quarto.org/) is a powerful web publishing system based on Pandoc.  Working with jupyter kernels expands the number of languages that Quarto can work with.  In this example we'll add SAS capability to Quarto.
