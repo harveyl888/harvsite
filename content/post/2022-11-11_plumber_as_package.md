@@ -48,6 +48,7 @@ Description: An R package to demonstrate developing a plumber API as a package.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:
+  pkgload,
   plumber
 RoxygenNote: 7.2.1
 Suggests: 
@@ -81,7 +82,7 @@ pr <- plumber::plumb("./R/plumber.R")
 
 There is no difference between this and the `plumber.R` file in a traditional plumber API.  It holds the endpoints for the API.  One advantage of building a package, however, is that the functions can be separated into other files.  This makes the `plumber.R` file more succint, holding just the API endpoints.
 
-In the code below we include a `NULL` function so that we can include any packages required by the API.  The `/version` endpoint returns the package version and the `/sum` endpoint calls a function called `sum_numbers()`.
+In the code below we include a `NULL` function so that any packages required by the API are added to `NAMESPACE`.  The `/version` endpoint returns the package version and the `/sum` endpoint calls a function called `sum_numbers()`.
 
 ```r
 #* @apiTitle My generic plumber API
@@ -184,9 +185,7 @@ In the tests below \*\*url\*\* is the API URL and \*\*apikey\*\* is an RStudio C
 ```r
 out <- httr::GET("**url**/version", httr::add_headers(Authorization = paste("Key", **apikey**)))
 httr::content(out)
-```
 
-```r
 $version
 [1] "0.0.1"
 ```
@@ -196,21 +195,17 @@ $version
 ```r
 out <- httr::GET("**url**/sum?a=1&b=4", httr::add_headers(Authorization = paste("Key", **apikey**)))
 httr::content(out)
-```
 
-```r
 $sum
 [1] 5
 ```
 
-### test 2
+### test 3
 
 ```r
 out <- httr::GET("**url**/sum?a=1&b=none", httr::add_headers(Authorization = paste("Key", **apikey**)))
 httr::content(out)
-```
 
-```r
 $sum
 [1] "not numeric"
 ```
