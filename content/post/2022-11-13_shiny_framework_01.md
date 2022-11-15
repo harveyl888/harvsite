@@ -8,38 +8,45 @@ codeMaxLines = 15
 draft = true
 +++
 
-# Shiny Frameworks
+## Shiny Frameworks
 
 This is the first in a series of blog posts tagged "shiny framework".  The goal is to provide a some loosely connected articles related to building shiny frameworks with the ultimate goal of turning them into an eBook.
 
-## What is a shiny framework?
+### What is a shiny framework?
+
 Imagine you've built a killer shiny app and you need to change the data.  Most apps are adaptable to a degree.  If you want to upload a different set of data, the app should be able to accommodate if the data are in an expected format.  
 But what if:
--  your data are in a completely different format?
--  you want to but manipulate your data in some way (filter or add a new variable)?
--  you want to use a completely different visualization?
+
+- your data are in a completely different format?
+- you want to manipulate your data in some way (filter or add a new variable)?
+- you want to use a completely different visualization?
 
 It's unlikely that the app can cope with these situations unless choices were made at the design stage.
 
 A shiny framework is an approach to building shiny apps which allows for:
--  flexibility: being able to offer choices at the populate-stage (more on this below).
--  extensibility: ability to readily extend the framework for unmet needs.
--  scalability: easily scale beyond the current needs of the app.
 
-## What's the populate-stage?
+- flexibility: being able to offer choices at the populate-stage (more on this below).
+- extensibility: ability to readily extend the framework for unmet needs.
+- scalability: easily scale beyond the current needs of the app.
 
-### Scenario One
+### What's the populate-stage?
+
+#### Scenario One
+
 Generally when we think of app development we consider three stages:
--  design stage.  Make choices as to how the app should look and behave.
--  build stage.  Incorporate choices made at the design stage through coding.
--  deployment stage.  Deploy the app for users, gather feedback and respond accordingly.
 
-### Scenario Two
+- design stage.  Make choices as to how the app should look and behave.
+- build stage.  Incorporate choices made at the design stage through coding.
+- deployment stage.  Deploy the app for users, gather feedback and respond accordingly.
+
+#### Scenario Two
+
 When we consider a framework approach we can include a fourth stage, populate, in which we populate the framework with information.
--  design stage.  Make choices as to how the app should look and behave.
--  build stage.  Incorporate choices made at the design stage through coding.
--  populate stage.  Populate our app with information.
--  deployment stage.  Deploy the app for users, gather feedback and respond accordingly.
+
+- design stage.  Make choices as to how the app should look and behave.
+- build stage.  Incorporate choices made at the design stage through coding.
+- populate stage.  Populate our app with information.
+- deployment stage.  Deploy the app for users, gather feedback and respond accordingly.
 
 In scenario one the developer builds the app and presents it to the customer.  Agile development allows a fast turnaround time but we still have the interaction between the development team and the end-user.
 
@@ -47,6 +54,6 @@ In scenario two we introduce a third person, the knowledge worker.  The knowledg
 In effect, the knowledge worker is involved in a secondary build stage; they are changing the way the app behaves without changing the underlying code.  
 This empowers the knowledge worker to have influence how the app behaves without the need of any programming knowledge.
 
-## Sample data
+### Sample data
 
 In the related posts we'll build a simple shiny framework which allows someone to create a series of visualizations based on the ferris wheel data taken from Tidy Tuesday (August 9, 2022).
