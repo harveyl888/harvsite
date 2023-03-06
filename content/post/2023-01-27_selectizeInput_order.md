@@ -1,11 +1,11 @@
 +++
 author = "Harvey"
 title = "Ordering Pre-selected Items in selectizeInput"
-date = "2022-11-11"
+date = "2023-01-27"
 description = "Maintaining the order of pre-selected items in selectizeInput"
 tags = ["R", "shiny"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 # SelectizeInput
