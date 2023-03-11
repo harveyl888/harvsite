@@ -1,6 +1,6 @@
 +++
 author = "Harvey"
-title = "Shiny Frameworks - Introduction"
+title = "Shiny Frameworks 01 - Introduction"
 date = "2023-02-16"
 description = "Shiny Frameworks - Introduction"
 tags = ["R", "shiny", "shiny framework", "opinion"]
