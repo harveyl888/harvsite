@@ -77,7 +77,7 @@ In this example, every time *list 1* or *list 2* changes, *input$reorder_list* u
 
 # Case Two.  Adding a New Value to an Existing List
 
-Updating the code above with an **actionButton** linked to **insertUI** allows us to add a new option to list 2 when the button is pressed.  This approach works but you'll see that it does not update *input$reorder_list*.
+Updating the code above with an **actionButton** linked to **insertUI** allows us to add a new option to list 2 when the button is pressed.  This approach works but you'll see that it does not update *input$reorder_list* until the list is updated (by moving an item).
 
 ```r
 library(shiny)
@@ -137,6 +137,8 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
+
+{{< figure src="/images/post-images/2023-11-10-sortable_add/sortable_01.gif" >}}
 
 In order to make this approach work we can manage the ordered list, *list 2* through a shiny input, *input$sort_list_2*.  This shiny variable is kept up to date through two methods: 
 
@@ -223,6 +225,8 @@ Shiny.addCustomMessageHandler('update_sortable', function(x) {
   }
 })
 ```
+
+{{< figure src="/images/post-images/2023-11-10-sortable_add/sortable_02.gif" >}}
 
 # Conclusion
 The code above demonstrates a suitable approach to add items to a sortable bucket list in a shiny app.  The concept can be extended to work with multiple lists, returning the content of each.
