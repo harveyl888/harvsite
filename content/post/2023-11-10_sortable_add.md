@@ -17,7 +17,7 @@ draft = true
 
 The second option (bucket list) is useful when a user wishes to divide a set of values between two or more buckets.  {sortable} integrates well within shiny but requires a few tweaks if data are added to the sortable object once it has been created.
 
-{{% notice note "Note Title" */%}}
+{{% notice note "Note" %}}
 {sortable} includes a function, `update_bucket_list()` which is used to update header text but not list items.
 {{% /notice %}}
 
