@@ -8,7 +8,7 @@ tags = ["R"]
 
 {learnr} is an R package from RStudio which uses R Markdown to create interactive tutorials.  Once completed, the tutorial can be published via shiny server or RStudio Connect.  As a {learnr} markdown file contains its own yaml header it cannot be directly included in a website built by distill.  It can, however, be included if it is hosted (shiny server or RStudio Connect) and embedded using `iframe`
 
-~~~{r}
+~~~r
 ```{r, layout="l-screen-inset"}
 htmltools::tags$iframe(src = "<RSCONNECT URL>", height = "600px", width = "100%", `data-external` = "1")
 ```
