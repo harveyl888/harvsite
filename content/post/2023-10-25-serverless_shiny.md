@@ -3,7 +3,7 @@ author = "Harvey"
 title = "Serverless shiny app embedded in a Quarto Website"
 date = "2023-10-25"
 description = "Serverless shiny app embedded in a Quarto Website"
-tags = ["R", "shiny"]
+tags = ["R", "shiny", "Quarto"]
 codeMaxLines = 15
 draft = true
 +++
