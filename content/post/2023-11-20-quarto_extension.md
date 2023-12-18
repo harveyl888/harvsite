@@ -127,6 +127,14 @@ This shortcode adds a comment inline.  It works slightly differently to `comment
 
 In this example, I've included `show_comments` as a document-level parameter.  It could be substituted at the project-level in `_quarto.yml` to manage a set of documents / website.  It can also be included in `_variables.yml` as a project-level variable in which case the line `cmt = meta['show_comments']` would be replaced by `cmt = meta['_quarto-vars']['show_comments']` in order to access variables defined in the `_variables.yml` file.
 
+## Final Steps
+
+Finally, a licence file was added (MIT licence), README was edited and the extension was pushed to GitHub at https://github.com/harveyl888/comment.  To install to a quarto project simply run: 
+
+```bash
+quarto add harveyl888/comment
+```
+
 # Conclusion
 
 Quarto includes methods to build all manner of extensions for documents and projects.  It is pretty simple to pick up lua, the scripting language for Quarto extensions, which means writing shortcodes should be fairly straightforward.  The use of an example file along with Quarto's hot reload provides a powerful way to build up shortcodes in an interactive manner[^1].
