@@ -5,7 +5,7 @@ date = "2023-10-25"
 description = "Serverless shiny app embedded in a Quarto Website"
 tags = ["R", "shiny", "Quarto"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 # Serverless Shiny

@@ -5,7 +5,7 @@ date = "2023-11-10"
 description = "Dynamically updating a sortable bucketlist upon adding a new element"
 tags = ["R", "shiny"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 # The {sortable} package

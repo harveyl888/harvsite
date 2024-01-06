@@ -5,7 +5,7 @@ date = "2023-09-04"
 description = "Moving a shiny textInput label to inside the textbox"
 tags = ["R", "shiny"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 # Shiny textInput label

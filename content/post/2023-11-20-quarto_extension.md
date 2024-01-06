@@ -5,7 +5,7 @@ date = "2023-11-20"
 description = "First attempt at building a Quarto extension"
 tags = ["Quarto"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 # Building my First Quarto Shortcode Extension
