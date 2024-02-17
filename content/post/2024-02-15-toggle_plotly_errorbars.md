@@ -5,7 +5,7 @@ date = "2024-02-15"
 description = "adding buttons to turn error bars on and off"
 tags = ["R", "Shiny"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 Plotly charts can be enhanced with custom controls.  One use of controls is to update an existing chart.  This post will show how to add a couple of buttons to a chart, toggling error bars on and off.  It should be noted that [coloring by group](https://github.com/plotly/plotly.R/issues/762) affects the order (and hence validity) of error bars in a Plotly plot so a [workaround](/post/2017-10-26-plotly_error_bars/) has to be employed.  

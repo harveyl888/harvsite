@@ -5,7 +5,7 @@ date = "2024-02-02"
 description = "how to pass an R6 class to Quarto as a parameter"
 tags = ["R", "Quarto"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 Quarto has many improvements over RMarkdown, plus a couple of limitations, one being that you cannot pass R objects as parameters to a Quarto document in the way the RMarkdown would accept them.  Quarto receives parameters serialized as yaml, so only text, numeric, boolean (received as *TRUE="yes"* and *FALSE="no"*) and lists can be passed.  There are instances when you may wish to pass a complex object, for example an R6 class instance, as a paramater for Quarto.  One way to do this is to first serialize the object and then pass it as a serialized JSON object.
