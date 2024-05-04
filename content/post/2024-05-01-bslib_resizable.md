@@ -58,3 +58,5 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
+
+{{< figure src="/images/post-images/2024-05-01-bslib_resizable/bslib_resize_card.gif" >}}
