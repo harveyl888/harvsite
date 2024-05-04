@@ -5,7 +5,7 @@ date = "2024-04-28"
 description = "child R6 classes that update a parent"
 tags = ["R"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 R has several object-oriented systems and I'm a big fan of R6.  Detailed below is a specific use-case.  I wanted a parent class that held a list of child classes with thet specification that the child class instances could update the parent class instance.

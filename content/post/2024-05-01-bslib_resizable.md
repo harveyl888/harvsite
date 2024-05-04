@@ -5,7 +5,7 @@ date = "2024-05-01"
 description = "bslib dashboards with resizable cards"
 tags = ["R", "shiny"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 This is a simple example of resizing {bslib} cards for a dashboard.  A card can be made resizable (vertical, horizontal or both) by using the `resize` property.  In order to use this in a {bslib} dashboard it can be added using `tags$style` or included in `bs_theme()`.  Adding the `resize-vertical` class adds a resize anchor to the botton right of a card.
