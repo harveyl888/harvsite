@@ -5,7 +5,7 @@ date = "2024-06-09"
 description = "How to build a series of selectable groups in Plotly"
 tags = ["R", "shiny"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 This is a short tutorial on building a plotly stripchart with a dropdown to select a dataset.  It covers a few points such as how to handle stripcharts with jitter in plotly, building the plotly menu programatically and how to format a dataset to work with plotly dropdowns.  

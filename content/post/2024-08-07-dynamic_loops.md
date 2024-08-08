@@ -5,7 +5,7 @@ date = "2024-08-07"
 description = "Building Dynamic Nested Loops in R"
 tags = ["R"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 ## Introduction
