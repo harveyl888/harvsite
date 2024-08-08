@@ -145,5 +145,6 @@ p <- p |> plotly::layout(
 p
 ```
 
+{{< figure src="/images/post-images/2024-06-09-plotly_group_select/plotly_group_select.gif" >}}
 
 [^1]: shiny apps can now be built server-free using webR.
