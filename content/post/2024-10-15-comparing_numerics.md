@@ -98,7 +98,7 @@ d |>
 
 ## Using the %in% Function
 
-Running the above code with `%in%` in place of `%within%` produces an interesting output:
+Running the above code with the base R `%in%` function (which, like many base R functions, is vectorized) in place of `%within%` produces an interesting output:
 
 ```r
 d |>
@@ -112,6 +112,8 @@ d |>
 # 4   0.4   1.4   1.8 FALSE    
 # 5   0.5   1.5   2   FALSE  
 ```
+
+Everything is false, as expected, except for `1.6`.  Looking at `val` and `myVals` illustrates why.  
 
 Here are the values of `val` at 20 decimal places:
 ```r
@@ -134,7 +136,7 @@ It's interesting to note that both values for 1.6 (d[3, ]$val and myvals[4]) are
 
 ### dplyr::rowwise()
 
-The non-vectorized version works when used in conjunction with `dplyr::rowwise()`
+The non-vectorized version works when used in conjunction with `dplyr::rowwise()` as `rowwise` computes one row at a time.
 
 ```r
 d |>
