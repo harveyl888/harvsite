@@ -6,7 +6,7 @@ date = "2025-01-02"
 description = "A New Year's balloon pop updated using Quarto"
 tags = ["Quarto"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 ## Introduction
