@@ -315,3 +315,129 @@ df |> gt::gt() |> gt_dots(data, items = c("p1", "p2", "p3", "p4"), sep = ",", to
 ```
 
 {{< figure src="/images/post-images/2025-01-13-gt_extensions/gt_dots_01.png" >}}
+
+
+## gt_subtitle()
+
+This function is very similar to the {gtExtras} function `gt_merge_stack()`, taking two columns and stacking the text of the first above the second.  This adds  optional text in parenthesis (useful in the case of a grouping value or tag) and a tooltip.  It demonstrates how a relatively simple function may be used to build some creative table columns.
+
+```r
+#' Add subtitle and tooltip to column
+#'
+#' This function is similar to gtExtras::gt_merge_stack().  It replaces the `col_title`
+#'     column with a formatted column that stacks `col_title` on top of `col_subtitle`. 
+#'     The upper text is converted to small caps and the lower text is smaller and grey. 
+#'     If `col_parenthesis` is included, values from an additional column are added to
+#'     the title in parenthesis.  This can be used to include a column grouping or tag.
+#'     If `col_tooltip` is included then values from this column will be used as data for
+#'     tooltips.  Output is returned in column `col_title` with columns `col_subtitle`,
+#'     `col_parenthesis` and `col_tooltip` removed.
+#'
+#' @param gt_object An existing gt object
+#' @param col_title The column holding the title
+#' @param col_subtitle The column holding the subtitle
+#' @param col_parenthesis Optional column holding data to be added in parentheses after
+#'     the title.  Often used to include a grouped column or tag
+#' @param col_tootlip Optional column holding data to be used as tooltip text
+#'
+#' @export
+#'
+gt_subtitle <- function(gt_object, col_title, col_subtitle, col_parenthesis = NULL, col_tootlip = NULL) {
+  stopifnot("Table must be of class 'gt_tbl'" = "gt_tbl" %in% class(gt_object))
+
+  col_subtitle_contents <- .gtindex(gt_object, {{ col_subtitle }})
+  col_parenthesis_missing <- rlang::quo_is_null(rlang::enquo(col_parenthesis))
+  col_tootlip_missing <- rlang::quo_is_null(rlang::enquo(col_tootlip))
+
+  if (!col_parenthesis_missing) {
+    col_parenthesis_contents <- .gtindex(gt_object, {{ col_parenthesis }})
+  }
+
+  if (!col_tootlip_missing) {
+    col_tootlip_contents <- .gtindex(gt_object, {{ col_tootlip }})
+  }
+
+  rtn <- gt::text_transform(
+    gt_object,
+    locations = gt::cells_body(columns = {{ col_title }}),
+    fn = function(x) {
+
+      if (!col_parenthesis_missing) {
+        txt <- glue::glue("{x} ({col_parenthesis_contents})")
+      } else {
+        txt <- x
+      }
+      
+      if (!col_tootlip_missing) {
+        glue::glue(
+          "<div data-bs-toggle='tooltip' data-bs-placement='right' data-bs-title=\"{col_tootlip_contents}\">
+             <div class='subtitle-top'>
+               <span>{txt}</span>
+             </div>
+             <div class='subtitle-bottom'>
+               <span>{col_subtitle_contents}</span>
+             </div>
+           </div>"
+        )
+
+      } else {
+
+        glue::glue(
+          "<div class='subtitle-top'>
+             <span>{txt}</span>
+           </div>
+           <div class='subtitle-bottom'>
+             <span>{col_subtitle_contents}</span>
+           </div>"
+        )
+      }
+    }
+  ) |>
+    gt::opt_css(
+      css = "
+        .subtitle-top {
+          line-height:10px;
+          text-align:left;
+        }
+        .subtitle-top span {
+          font-weight: bold;
+          font-variant: small-caps;
+          font-size: 14px;
+        }
+        .subtitle-bottom {
+          line-height:12px;
+          text-align:left;
+        }
+        .subtitle-bottom span {
+          font-weight: bold;
+          color: grey;
+          font-size: 10px
+        }
+
+      "
+    )
+
+  rtn <- rtn  %>%
+    gt::cols_hide({{col_subtitle}})
+  if (!col_parenthesis_missing) {
+    rtn <- rtn %>%
+      gt::cols_hide({{col_parenthesis}})
+  }
+  if (!col_tootlip_missing) {
+    rtn <- rtn %>%
+      gt::cols_hide({{col_tootlip}})
+  }
+
+  rtn
+
+}
+```
+
+#### Example Output
+
+```r
+df <- data.frame(name = c("Name 1", "Name 2"), title = c("VP", "Chair"), gp = c("AAA", "AAA"), tt = c("First Person", "Second Person"))
+df |> gt::gt() |> gt_subtitle(col_title = name, col_subtitle = title, col_parenthesis = gp, col_tootlip = tt)
+```
+
+{{< figure src="/images/post-images/2025-01-13-gt_extensions/gt_subtitle_01.png" >}}
