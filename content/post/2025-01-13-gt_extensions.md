@@ -13,6 +13,45 @@ draft = true
 
 The {gt} package is a great R package for building tables and the outputs that can be generated, particularly in HTML, are stunning.  The {gtExtras} pacakge, from Tom Mock, extends the functionality of {gt}.  In developing a Quarto report, I found that I needed some tabular outputs that were not present in {gt}.  Taking inspiration from {gtExtras}, here's some code and explanation, on adding additional functions to {gt}.
 
+## TL/DR
+
+Here's a quick illustration of the extensions discussed in the blog post.
+
+```r
+
+## table of dates
+df_dates <- tibble::tibble(
+  name = c("Alice", "Bob", "Carol", "Carol", "Dan", "Alice", "Bob", "Carol", "Carol", "Dan", "Alice"),
+  var = c(rep(c("start", "end"), each = 5), "empty"),
+  date = c("2024-10-05", "2024-10-13", "2024-09-10", "2024-11-11", "2024-10-01", "2025-01-03", "2024-12-20", "2025-01-04", "2024-12-20", "2025-01-10", "2024-12-05")
+) |>
+  tidyr::nest(dates = c(var, date))
+
+## table of employee details (inc. dates)
+df <- tibble::tibble(
+  name = c("Alice", "Bob", "Carol", "Dan"),
+  level = c("Director", "VP", "Director", "Assoc Director"),
+  division = c("HR", "sales", "sales", "HR"),
+    notes = c("n/a", "n/a", "n/a", "Dan has been with us for 5 years"),
+  projects = c("project 1;project 2;project 3", "project 2", "project 1;project 3", "project 2;project 3;project 4"),
+  division_badge = c("HR", "sales", "sales", "HR"),
+  alert = c(TRUE, TRUE, FALSE, FALSE)
+) |>
+  dplyr::left_join(df_dates, by = "name")
+
+## create gt table
+df |>
+  gt::gt() |> 
+  gt_subtitle(col_title = name, col_subtitle = level, col_parenthesis = division, col_tootlip = notes) |>
+  gt_dots(projects, items = c("project 1", "project 2", "project 3", "project 4"), sep = ";", tooltip = TRUE) |>
+  gt_alert(alert) |>
+  gt_badge(division_badge, palette = c(HR = "#2244CC", sales = "#22CC44")) |>
+  gt_timeline(dates, min_date = "2024-09-01", max_date = "2025-01-13", palette = c(start = "#00AA00", end = "#AA0000"))
+
+```
+
+{{< figure src="/images/post-images/2025-01-13-gt_extensions/gt_extensions.png" >}}
+
 ## gtIndex
 
 The `gt_index()` function is a useful function lifted from the {gtExtras} package.  It returns the underlying data of a column and is used extensively in gtExtras functions.  Rather than rely on a dependence to {gtExtras} I've extracted the function, included here as `.gtindex()`.
@@ -441,3 +480,156 @@ df |> gt::gt() |> gt_subtitle(col_title = name, col_subtitle = title, col_parent
 ```
 
 {{< figure src="/images/post-images/2025-01-13-gt_extensions/gt_subtitle_01.png" >}}
+
+## gt_timeline()
+
+This function adds a timeline.  Dates are plotted as markers along a time axis for each cell in a column.  The dates are stored as tibbles for each row.  The dates tibbles contain a `var` column for labels and a `date` column for dates.  Dates can be color-coded by `var` and also include a hover to highlight `var` and `date` characteristics.
+
+```r
+#' Create a timeline
+#'
+#' Create a linear date line with markers representing dates.  The input column is
+#'     expected to be a list column of tibbles, each with a `var` column holding labels
+#'     and a `date` column holding dates.
+#'
+#' @param gt_object An existing gt object
+#' @param column The column to convert to a timeline
+#' @param min_date Minimum date (format = yyyy-mm-dd).  If missing then the minimum date
+#'     is determined from the data
+#' @param max_date Maximum date (format = yyyy-mm-dd).  If missing then the maximum date
+#'     is determined from the data
+#' @param palette Named vector of colors (optional).  If included then color named values
+#'     from the `var` column accordingly
+#' @param add_key If TRUE and a palette is included then include a color key as a table
+#'     footnote
+#'
+gt_timeline <- function(gt_object, column, min_date = NULL, max_date = NULL, palette = c(), add_key = FALSE) {
+
+  stopifnot("Table must be of class 'gt_tbl'" = "gt_tbl" %in% class(gt_object))
+
+  default_fill <- "#ADD8E6"
+  if (length(palette) == 0) {
+    df_cols <- tibble::tibble(var = character(), fill_color = character())
+  } else {
+    df_cols <- tibble::enframe(palette, name = "var", value = "fill_color")
+  }
+
+  cell_contents <- .gtindex(gt_object, {{ column }})
+
+  if (any(missing(min_date), missing(max_date))) {
+    v_times <- cell_contents |>
+      dplyr::bind_rows() |>
+      dplyr::pull(date)
+    if (missing(min_date)) {
+      min_date <- min(v_times)
+    }
+    if (missing(max_date)) {
+      max_date <- max(v_times)
+    }
+  }
+
+  day_range <- as.numeric(difftime(as.Date(max_date), as.Date(min_date), 'days'))
+  w <- 150  # width
+
+  rtn <- gt::text_transform(
+    gt_object,
+    locations = gt::cells_body(columns = {{ column }}),
+    fn = function(x) {
+
+      lapply(cell_contents, function(d) {
+
+        plt_d <- d |>
+          dplyr::mutate(days = as.numeric(difftime(as.Date(date), as.Date(min_date), 'days'))) |>
+          dplyr::mutate(xval = w * days / day_range) |>
+          dplyr::mutate(textanchor = dplyr::case_when(
+            xval < 0.4 * w ~ "start",
+            xval > 0.6 * w ~ "end",
+            .default = "middle"
+          )) |>
+          dplyr::left_join(df_cols, by = "var") |>
+          dplyr::mutate(fill_color = dplyr::if_else(is.na(fill_color), default_fill, fill_color))
+
+        svg_line <- glue::glue('<line x1="0" y1="17" x2="{w+10}" y2="17" style="stroke: #808080; stroke-width: 1" />')
+
+        svg_pts <- plt_d |>
+          glue::glue_data('
+        <g class = "gttime">
+        <circle class="gttimedot" cx="{xval+5}" cy="17" r="5" stroke="#000" stroke-width="1" fill="{fill_color}" />
+        <text class="gttimelab" x="{xval+5}" y="9" font-size=".6em" text-anchor="{textanchor}">{var} ({date})</text>
+        </g>
+      ') |>
+          glue::glue_collapse(sep = "")
+
+        glue::glue('<svg width="{w+10}" height="23" xmlns=http://www.w3.org/2000/svg>{svg_line}{svg_pts}</svg>')
+        
+      })
+    }
+  ) |>
+    gt::fmt_markdown(columns = {{ column }}) %>%
+    gt::opt_css(
+      css = "
+        .gttime {
+          overflow: visible;
+        }
+        .gttimelab {
+          display: none;
+          overflow: visible;
+        }
+        .gttime:hover {
+           text {display: block;}
+        }
+      "
+    )
+
+  if (add_key == TRUE & length(palette) > 0) {
+
+    color_key <- lapply(seq_along(palette), function(i) {
+      paste0("<span style = 'margin-right: 15px'><span style = 'margin-right: 5px'>", bsicons::bs_icon('circle-fill', color = palette[i]), "</span><span>", names(palette)[i], "</span></span>")
+    }) |>
+      paste(collapse = "")
+
+    color_key <- paste0("<span><span style = 'margin-right: 20px;'>Key:</span>", color_key, "</span>")
+    
+    rtn <- rtn %>%
+      gt::tab_footnote(footnote = gt::html(color_key), locations = gt::cells_column_labels({{column}}))
+
+  }
+
+  return(rtn)
+
+}
+```
+
+The function works by defining a variable `day_range` which is the number of days for the timeline (max - min).  Next, each date is expressed as the fraction along the timeline multiplied by the width of the output.  Cells are constructed by building up SVG graphics as follows:
+
+-  plot the timeline as a horizontal line just below the center of the cell
+-  for each time point plot it on the timeline within a group of class `gttime`
+-  add text for each timeline within the same group
+
+The css added controls the visibility.  Labels are initialized with `display: none` so they will be hidden.  On hovering we set `display: block` so that the label is visible.
+
+Hover labels are positioned so that if they fall in the first 40% of the timeline they are left-justified, if they fall in the last 40% of the timeline they are right-justified and if they fall in the middle 20% they are centered.  This helps position labels within the timeline region, avoiding overflow.
+
+#### Example Output
+
+```r
+df <-  data.frame(ref = c(1, 1, 2, 2), 
+                  var = c("start", "end", "start", "end"), 
+                  date = c("2024-10-04", "2024-12-05", "2024-10-25", "2024-12-07")) |>
+  tidyr::nest(dates = c(var, date))
+
+df
+## A tibble: 2 × 2
+#    ref dates           
+#  <dbl> <list>          
+#1     1 <tibble [2 × 2]>
+#2     2 <tibble [2 × 2]>
+```
+
+```r
+df |> gt::gt() |> gt_timeline(dates, min_date = "2024-10-01", max_date = "2024-12-31", palette = c(start = "#00AA00", end = "#AA0000"))
+```
+
+{{< figure src="/images/post-images/2025-01-13-gt_extensions/gt_timeline_01.png" >}}
+
+
