@@ -6,7 +6,7 @@ date = "2025-01-13"
 description = "Adding Additional Functionality to the gt Package"
 tags = ["R"]
 codeMaxLines = 15
-draft = true
+draft = false
 +++
 
 ## Introduction
